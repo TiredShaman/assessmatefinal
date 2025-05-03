@@ -22,18 +22,24 @@ function AuthCallback({ setUser }) {
         },
       })
         .then(response => {
+          if (response.status === 401 || response.status === 403) {
+            throw new Error('Session expired or invalid token');
+          }
           if (!response.ok) {
-            throw new Error('Failed to validate token');
+            throw new Error(`Network error: ${response.status}`);
           }
           return response.json();
         })
         .then(data => {
+          if (!data || !data.id || !data.username) {
+            throw new Error('Invalid user data received');
+          }
           const userData = {
             id: data.id,
             username: data.username,
             email: data.email,
             fullName: data.fullName,
-            roles: data.roles,
+            roles: Array.isArray(data.roles) ? data.roles : [],
             token: token,
           };
           if (needsRoleSelection) {
@@ -48,9 +54,18 @@ function AuthCallback({ setUser }) {
           }
         })
         .catch(err => {
-          const errorMessage = err.message || 'Failed to validate token';
-          toast.error(errorMessage, { position: 'top-right', autoClose: 3000 });
-          console.error('Token validation error:', err);
+          const errorMessage = err.message || 'Authentication failed. Please try again.';
+          // Clear any existing auth data
+          localStorage.removeItem('user');
+          localStorage.removeItem('jwtToken');
+          localStorage.removeItem('token');
+          toast.error(errorMessage, { 
+            position: 'top-right', 
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
+          console.error('Authentication error:', err);
           navigate('/login', { state: { message: errorMessage } });
         });
     } else if (error) {

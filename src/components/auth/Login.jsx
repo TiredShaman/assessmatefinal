@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -73,21 +73,38 @@ function Login({ setUser }) {
     };
   }, []);
 
-  const handleTokenValidation = (token, needsRoleSelection) => {
+  const handleTokenValidation = useCallback((token, needsRoleSelection) => {
+    if (!token) {
+      setError('No authentication token received');
+      return;
+    }
+
+    // Add request timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
     fetch(`${config.API_URL}/api/auth/validate`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+      signal: controller.signal
     })
       .then(response => {
+        clearTimeout(timeoutId);
+        if (response.status === 401 || response.status === 403) {
+          throw new Error('Session expired or invalid token');
+        }
         if (!response.ok) {
-          throw new Error('Failed to validate login token');
+          throw new Error(`Server error: ${response.status}`);
         }
         return response.json();
       })
       .then(data => {
+        if (!data || !data.id) {
+          throw new Error('Invalid response from server');
+        }
         const userData = {
           id: data.id,
           username: data.username,
@@ -111,12 +128,25 @@ function Login({ setUser }) {
         }
       })
       .catch(err => {
-        const errorMessage = err.message || 'Failed to validate login';
+        const errorMessage = err.name === 'AbortError' 
+          ? 'Request timed out. Please try again.'
+          : (err.message || 'Failed to validate login');
+        
         setError(errorMessage);
-        toast.error(errorMessage, { position: 'top-right', autoClose: 3000 });
+        toast.error(errorMessage, {
+          position: 'top-right',
+          autoClose: 5000,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
         console.error('Login validation error:', err);
+        
+        // Clear any existing auth data
+        localStorage.removeItem('user');
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('token');
       });
-  };
+  }, [setError, setUser, navigate]);
 
   const handleRoleSelection = () => {
     if (!selectedRole) {
@@ -214,56 +244,55 @@ function Login({ setUser }) {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = useCallback(() => {
     const width = 500;
     const height = 600;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
     
-    const popup = window.open(
-      'https://assessmate-j21k.onrender.com/oauth2/authorization/google',
-      'googleOAuth',
-      `width=${width},height=${height},left=${left},top=${top},status=yes,scrollbars=yes`
-    );
-  
-    if (!popup) {
-      setError('Failed to open popup. Please allow popups for this site.');
-      toast.error('Failed to open popup', { position: 'top-right', autoClose: 3000 });
-      return;
-    }
+    try {
+      const popup = window.open(
+        `${config.API_URL}/oauth2/authorization/google`,
+        'googleOAuth',
+        `width=${width},height=${height},left=${left},top=${top},status=yes,scrollbars=yes`
+      );
 
-    // Instead of checking popup.closed, use a message-based approach
-    const handleMessage = (event) => {
-      // Verify origin
-      if (event.origin !== 'https://assessmate-j21k.onrender.com') {
-        return;
+      if (!popup || popup.closed) {
+        throw new Error('Popup blocked! Please allow popups for this site.');
       }
 
-      try {
-        const { token, error, needsRoleSelection } = event.data;
-        
-        if (error) {
-          setError(error);
-          toast.error(error, { position: 'top-right', autoClose: 3000 });
-        } else if (token) {
-          handleTokenValidation(token, needsRoleSelection);
+      // Check popup status
+      const checkClosed = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(checkClosed);
+          setError('Authentication window was closed');
+          toast.error('Login cancelled', { 
+            position: 'top-right', 
+            autoClose: 3000 
+          });
         }
-      } catch (err) {
-        console.error('Error processing OAuth response:', err);
-        setError('Failed to process authentication response');
-        toast.error('Authentication failed', { position: 'top-right', autoClose: 3000 });
-      } finally {
-        window.removeEventListener('message', handleMessage);
-      }
-    };
+      }, 1000);
 
-    window.addEventListener('message', handleMessage);
-
-    // Clean up after 5 minutes (maximum OAuth flow time)
-    setTimeout(() => {
-      window.removeEventListener('message', handleMessage);
-    }, 300000);
-  };
+      // Cleanup after 5 minutes
+      setTimeout(() => {
+        clearInterval(checkClosed);
+        if (!popup.closed) {
+          popup.close();
+          setError('Authentication timed out');
+          toast.error('Authentication timed out', { 
+            position: 'top-right', 
+            autoClose: 3000 
+          });
+        }
+      }, 300000);
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message, { 
+        position: 'top-right', 
+        autoClose: 3000 
+      });
+    }
+  }, []);
 
   // Added function to handle modal close
   const handleModalClose = () => {
