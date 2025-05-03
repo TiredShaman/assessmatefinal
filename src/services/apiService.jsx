@@ -1,23 +1,55 @@
 import authHeader from './authHeader';
+import config from '../config/config';
 
-// Example API service
-const ApiService = {
-  fetchProtectedData: async () => {
+const handleApiResponse = async (response) => {
+  if (response.status === 401) {
+    localStorage.clear();
+    window.location.href = '/login';
+    throw new Error('Session expired. Please login again.');
+  }
+  
+  if (!response.ok) {
+    const error = await response.text();
     try {
-      const response = await fetch('https://assessmate-j21k.onrender.com/api/protected-endpoint', {
-        method: 'GET',
-        headers: authHeader()
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
+      const parsedError = JSON.parse(error);
+      throw new Error(parsedError.message || 'Request failed');
+    } catch (e) {
+      throw new Error(error || `HTTP error! status: ${response.status}`);
+    }
+  }
+  
+  return response.json();
+};
+
+const ApiService = {
+  makeRequest: async (endpoint, options = {}) => {
+    const defaultOptions = {
+      method: 'GET',
+      headers: authHeader(),
+      credentials: 'include',
+      mode: 'cors'
+    };
+
+    const fetchOptions = {
+      ...defaultOptions,
+      ...options,
+      headers: {
+        ...defaultOptions.headers,
+        ...options.headers
       }
-      
-      return await response.json();
+    };
+
+    try {
+      const response = await fetch(`${config.API_URL}${endpoint}`, fetchOptions);
+      return await handleApiResponse(response);
     } catch (error) {
-      console.error('API error:', error);
+      console.error('API request failed:', error);
       throw error;
     }
+  },
+
+  fetchProtectedData: () => {
+    return ApiService.makeRequest('/api/protected-endpoint');
   }
 };
 
