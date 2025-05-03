@@ -73,15 +73,20 @@ function Login({ setUser }) {
     };
   }, []);
 
+  // Add token validation error handler
+  const handleTokenError = useCallback(() => {
+    localStorage.clear();
+    setUser(null);
+    navigate('/login', { 
+      state: { message: 'Your session has expired. Please log in again.' }
+    });
+  }, [navigate, setUser]);
+
   const handleTokenValidation = useCallback((token, needsRoleSelection) => {
     if (!token) {
       setError('No authentication token received');
       return;
     }
-
-    // Add request timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
     fetch(`${config.API_URL}/api/auth/validate`, {
       method: 'GET',
@@ -89,64 +94,61 @@ function Login({ setUser }) {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      signal: controller.signal
+      credentials: 'include' // Add this to include cookies
     })
-      .then(response => {
-        clearTimeout(timeoutId);
-        if (response.status === 401 || response.status === 403) {
-          throw new Error('Session expired or invalid token');
-        }
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (!data || !data.id) {
-          throw new Error('Invalid response from server');
-        }
-        const userData = {
-          id: data.id,
-          username: data.username,
-          email: data.email,
-          fullName: data.fullName,
-          roles: data.roles,
-          token: token,
-        };
+    .then(response => {
+      if (response.status === 401) {
+        handleTokenError();
+        throw new Error('Session expired');
+      }
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (!data || !data.id) {
+        throw new Error('Invalid response from server');
+      }
+      const userData = {
+        id: data.id,
+        username: data.username,
+        email: data.email,
+        fullName: data.fullName,
+        roles: data.roles,
+        token: token,
+      };
 
-        if (needsRoleSelection) {
-          setTempUserData(userData);
-          setShowRolePrompt(true);
-        } else {
-          localStorage.setItem('user', JSON.stringify(userData));
-          localStorage.setItem('jwtToken', token);
-          localStorage.setItem('token', token);
-          setUser(userData);
-          setShowSuccessModal(true); // Show modal on successful login
-          toast.success('Login successful!', { position: 'top-right', autoClose: 3000 });
-          navigate('/dashboard');
-        }
-      })
-      .catch(err => {
-        const errorMessage = err.name === 'AbortError' 
-          ? 'Request timed out. Please try again.'
-          : (err.message || 'Failed to validate login');
-        
-        setError(errorMessage);
-        toast.error(errorMessage, {
-          position: 'top-right',
-          autoClose: 5000,
-          closeOnClick: true,
-          pauseOnHover: true,
-        });
-        console.error('Login validation error:', err);
-        
-        // Clear any existing auth data
-        localStorage.removeItem('user');
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('token');
+      if (needsRoleSelection) {
+        setTempUserData(userData);
+        setShowRolePrompt(true);
+      } else {
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('jwtToken', token);
+        localStorage.setItem('token', token);
+        setUser(userData);
+        setShowSuccessModal(true); // Show modal on successful login
+        toast.success('Login successful!', { position: 'top-right', autoClose: 3000 });
+        navigate('/dashboard');
+      }
+    })
+    .catch(err => {
+      const errorMessage = err.message || 'Failed to validate login';
+      setError(errorMessage);
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 5000,
+        closeOnClick: true,
+        pauseOnHover: true,
       });
-  }, [setError, setUser, navigate]);
+      console.error('Login validation error:', err);
+      
+      // Clear any existing auth data
+      localStorage.removeItem('user');
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('token');
+    });
+  }, [setError, setUser, navigate, handleTokenError]);
 
   const handleRoleSelection = () => {
     if (!selectedRole) {
@@ -202,17 +204,23 @@ function Login({ setUser }) {
     setLoading(true);
     setError('');
   
-    const payload = { username: username.trim(), password: password.trim() };
-  
     try {
       const response = await fetch(`${config.API_URL}/api/auth/signin`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload),
+        credentials: 'include', // Add this
+        body: JSON.stringify({ 
+          username: username.trim(), 
+          password: password.trim() 
+        })
       });
   
+      if (response.status === 401) {
+        throw new Error('Invalid credentials');
+      }
+
       const data = await response.json();
   
       if (!response.ok) {

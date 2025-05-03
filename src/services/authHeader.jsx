@@ -1,15 +1,16 @@
 export default function authHeader() {
   const user = JSON.parse(localStorage.getItem('user'));
 
-  if (user && user.token) {
-    const headers = {
-      Authorization: `Bearer ${user.token}`,
-      'Content-Type': 'application/json',
-    };
-    return headers;
-  } else {
-    return {
-      'Content-Type': 'application/json',
-    };
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  if (user?.token) {
+    headers.Authorization = `Bearer ${user.token}`;
+    // Add additional security headers
+    headers['X-Requested-With'] = 'XMLHttpRequest';
+    headers['Cache-Control'] = 'no-cache';
   }
+
+  return headers;
 }
