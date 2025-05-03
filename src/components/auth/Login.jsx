@@ -176,18 +176,23 @@ function Login({ setUser }) {
     console.log('Sending login payload:', payload);
 
     try {
-      const response = await fetch(`${config.API_URL}/api/auth/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+        const response = await fetch(`${config.API_URL}/api/auth/signin`, {
+            method: 'POST',
+            credentials: 'include', // Add this
+            headers: { 
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': 'https://assessmatefinal-6cog.vercel.app',
+                'Access-Control-Allow-Credentials': 'true'
+            },
+            body: JSON.stringify(payload),
+        });
 
-      const data = await response.json();
-      console.log('Login response status:', response.status, 'data:', data);
+        const data = await response.json();
+        console.log('Login response status:', response.status, 'data:', data);
 
-      if (!response.ok) {
-        throw new Error(data.message || `Login failed with status ${response.status}`);
-      }
+        if (!response.ok) {
+            throw new Error(data.message || `Login failed with status ${response.status}`);
+        }
 
       const userData = {
         id: data.id,
@@ -211,10 +216,10 @@ function Login({ setUser }) {
       setError(errorMessage);
       toast.error(errorMessage, { position: 'top-right', autoClose: 3000 });
       console.error('Login error:', err);
-    } finally {
+  } finally {
       setLoading(false);
-    }
-  };
+  }
+};
 
   const handleGoogleLogin = () => {
     const width = 500;
