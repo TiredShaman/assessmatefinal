@@ -171,55 +171,48 @@ function Login({ setUser }) {
     e.preventDefault();
     setLoading(true);
     setError('');
-
+  
     const payload = { username: username.trim(), password: password.trim() };
-    console.log('Sending login payload:', payload);
-
+  
     try {
-        const response = await fetch(`${config.API_URL}/api/auth/signin`, {
-            method: 'POST',
-            credentials: 'include', // Add this
-            headers: { 
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': 'https://assessmatefinal-6cog.vercel.app',
-                'Access-Control-Allow-Credentials': 'true'
-            },
-            body: JSON.stringify(payload),
-        });
-
-        const data = await response.json();
-        console.log('Login response status:', response.status, 'data:', data);
-
-        if (!response.ok) {
-            throw new Error(data.message || `Login failed with status ${response.status}`);
-        }
-
+      const response = await fetch(`${config.API_URL}/api/auth/signin`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || `Login failed with status ${response.status}`);
+      }
+  
+      // Make sure this data structure matches what your backend returns
       const userData = {
         id: data.id,
         username: data.username,
         email: data.email,
         fullName: data.fullName,
         roles: data.roles,
-        token: data.token,
+        token: data.token, // Ensure this exists in the response
       };
+  
+      // Store all necessary auth data
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('jwtToken', data.token);
       localStorage.setItem('token', data.token);
-      console.log('Stored user in localStorage:', userData);
-
+      
       setUser(userData);
-      setShowSuccessModal(true); // Show modal on successful form login
-      toast.success('Login successful!', { position: 'top-right', autoClose: 3000 });
+      setShowSuccessModal(true);
       navigate('/dashboard');
     } catch (err) {
-      const errorMessage = err.message || 'Failed to login';
-      setError(errorMessage);
-      toast.error(errorMessage, { position: 'top-right', autoClose: 3000 });
-      console.error('Login error:', err);
-  } finally {
+      setError(err.message || 'Failed to login');
+      toast.error(err.message || 'Failed to login', { position: 'top-right', autoClose: 3000 });
+    } finally {
       setLoading(false);
-  }
-};
+    }
+  };
 
   const handleGoogleLogin = () => {
     const width = 500;
