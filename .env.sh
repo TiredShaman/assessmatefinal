@@ -1,3 +1,3 @@
-VITE_API_URL=https://localhost:8080
-VITE_GOOGLE_AUTH_URL=https://localhost:8080/oauth2/authorization/google
-VITE_FRONTEND_URL=https://localhost:5173
+VITE_API_URL=https://assessmate-j21k.onrender.com
+VITE_GOOGLE_AUTH_URL=https://assessmate-j21k.onrender.com/oauth2/authorization/google
+VITE_FRONTEND_URL=https://assessmate-learning.vercel.app
