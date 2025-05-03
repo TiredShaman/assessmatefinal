@@ -30,7 +30,7 @@ function CreateQuiz({ user }) {
       try {
         const headers = authHeader();
         console.log('CreateQuiz - Fetching courses with headers:', headers);
-        const response = await fetch('http://localhost:8080/api/teachers/courses', {
+        const response = await fetch('https://assessmate-j21k.onrender.com/api/teachers/courses', {
           method: 'GET',
           headers,
         });
@@ -83,7 +83,7 @@ function CreateQuiz({ user }) {
       const headers = authHeader();
       console.log('CreateQuiz - Sending POST with headers:', headers);
       console.log('CreateQuiz - Sending POST with body:', quizData);
-      const response = await fetch(`http://localhost:8080/api/teachers/courses/${selectedCourseId}/quizzes`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses/${selectedCourseId}/quizzes`, {
         method: 'POST',
         headers: {
           ...headers,

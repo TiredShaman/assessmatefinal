@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import authHeader from '../../services/authHeader';
+import config from '../../config/config.js';
 
 function GradeSubmission() {
   const { submissionId } = useParams();
@@ -17,7 +18,7 @@ function GradeSubmission() {
       try {
         const headers = authHeader();
         console.log('Fetching submission with headers:', headers);
-        const response = await fetch(`http://localhost:8080/api/teachers/submissions/${submissionId}`, {
+        const response = await fetch(`${config.API_URL}/api/teachers/submissions/${submissionId}`, {
           method: 'GET',
           headers,
         });
@@ -91,7 +92,7 @@ function GradeSubmission() {
     try {
       const headers = authHeader();
       console.log('Submitting grade with data:', gradeData);
-      const response = await fetch(`http://localhost:8080/api/teachers/submissions/${submissionId}/grade`, {
+      const response = await fetch(`${config.API_URL}/api/teachers/submissions/${submissionId}/grade`, {
         method: 'PUT',
         headers: {
           ...headers,

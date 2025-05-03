@@ -61,7 +61,7 @@ function StudentDashboard({ user }) {
     try {
       const headers = authHeader();
       console.log("Fetching courses with headers:", headers);
-      const response = await fetch("http://localhost:8080/api/students/courses", {
+      const response = await fetch("https://assessmate-j21k.onrender.com/api/students/courses", {
         method: "GET",
         headers,
       });
@@ -95,7 +95,7 @@ function StudentDashboard({ user }) {
       console.log("Fetching stats with headers:", headers);
 
       // Fetch enrolled courses
-      const coursesResponse = await fetch("http://localhost:8080/api/students/courses", { headers });
+      const coursesResponse = await fetch("https://assessmate-j21k.onrender.com/api/students/courses", { headers });
       if (!coursesResponse.ok) {
         const errorBody = await coursesResponse.text();
         console.error("enrolledCourses API error:", coursesResponse.status, errorBody);
@@ -106,7 +106,7 @@ function StudentDashboard({ user }) {
       console.log("enrolledCourses fetched:", enrolledCoursesCount);
 
       // Fetch completed quizzes
-      const submissionsResponse = await fetch("http://localhost:8080/api/students/submissions", { headers });
+      const submissionsResponse = await fetch("https://assessmate-j21k.onrender.com/api/students/submissions", { headers });
       if (!submissionsResponse.ok) {
         const errorBody = await submissionsResponse.text();
         console.error("completedQuizzes API error:", submissionsResponse.status, errorBody);
@@ -121,7 +121,7 @@ function StudentDashboard({ user }) {
       if (Array.isArray(coursesData)) {
         for (const course of coursesData) {
           const courseId = course.id;
-          const activeQuizzesResponse = await fetch(`http://localhost:8080/api/students/courses/${courseId}/quizzes`, { headers });
+          const activeQuizzesResponse = await fetch(`https://assessmate-j21k.onrender.com/api/students/courses/${courseId}/quizzes`, { headers });
           if (!activeQuizzesResponse.ok) {
             const errorBody = await activeQuizzesResponse.text();
             console.error("activeQuizzes API error:", activeQuizzesResponse.status, errorBody);

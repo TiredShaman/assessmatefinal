@@ -32,7 +32,7 @@ function StudentGrades({ user }) {
       try {
         const headers = authHeader();
         console.log("Fetching grades with headers:", headers);
-        const response = await fetch('http://localhost:8080/api/students/grades', {
+        const response = await fetch('https://assessmate-j21k.onrender.com/api/students/grades', {
           method: 'GET',
           headers,
         });

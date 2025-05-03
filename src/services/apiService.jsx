@@ -4,7 +4,7 @@ import authHeader from './authHeader';
 const ApiService = {
   fetchProtectedData: async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/protected-endpoint', {
+      const response = await fetch('https://assessmate-j21k.onrender.com/api/protected-endpoint', {
         method: 'GET',
         headers: authHeader()
       });

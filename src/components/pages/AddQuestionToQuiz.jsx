@@ -56,7 +56,7 @@ function AddQuestionToQuiz() {
       const headers = authHeader();
 
       // Make POST request to add the question to the specific quiz
-      const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}/questions`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}/questions`, {
         method: 'POST',
         headers: {
              ...headers, // Include auth headers

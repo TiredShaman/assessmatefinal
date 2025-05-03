@@ -33,7 +33,7 @@ function AvailableQuizzes({ user }) {
       try {
         const headers = authHeader();
         console.log("Fetching quizzes with headers:", headers, "courseId:", courseId);
-        const response = await fetch(`http://localhost:8080/api/students/courses/${courseId}/quizzes`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/students/courses/${courseId}/quizzes`, {
           method: 'GET',
           headers,
         });

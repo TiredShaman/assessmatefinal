@@ -23,7 +23,7 @@ function ViewQuizzes({ user }) {
     const fetchQuizzes = async () => {
       try {
         const headers = authHeader();
-        const response = await fetch(`http://localhost:8080/api/teachers/quizzes`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes`, {
           method: 'GET',
           headers,
         });
@@ -65,7 +65,7 @@ function ViewQuizzes({ user }) {
     console.log('Toggling active state for quiz ID:', quizId);
     try {
       const headers = authHeader();
-      const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}/activate`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}/activate`, {
         method: 'PUT',
         headers,
       });
@@ -102,7 +102,7 @@ function ViewQuizzes({ user }) {
     if (window.confirm('Are you sure you want to delete this quiz? This action cannot be undone.')) {
       try {
         const headers = authHeader();
-        const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}`, {
           method: 'DELETE',
           headers,
         });

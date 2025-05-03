@@ -12,7 +12,7 @@ function ViewQuizSubmissions() {
     // Function to fetch submissions for a specific quiz
     const fetchSubmissions = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}/submissions`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}/submissions`, {
           method: 'GET',
           headers: authHeader(), // Include the Authorization header
         });

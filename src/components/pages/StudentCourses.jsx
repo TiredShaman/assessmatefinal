@@ -42,7 +42,7 @@ function StudentCourses({ user }) {
           throw new Error('No authentication token found. Please login again.');
         }
 
-        const response = await fetch('http://localhost:8080/api/students/courses', {
+        const response = await fetch('https://assessmate-j21k.onrender.com/api/students/courses', {
           method: 'GET',
           headers,
         });
@@ -100,7 +100,7 @@ function StudentCourses({ user }) {
     setQuizError(prev => ({ ...prev, [courseId]: null }));
     try {
       // Assume this endpoint exists: GET /api/students/courses/{courseId}/quizzes
-      const response = await fetch(`http://localhost:8080/api/students/courses/${courseId}/quizzes`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/students/courses/${courseId}/quizzes`, {
         method: 'GET',
         headers,
       });

@@ -1,7 +1,7 @@
 const config = {
-    API_URL: import.meta.env.VITE_API_URL || 'https://assessmate-j21k.onrender.com',
-    GOOGLE_AUTH_URL: import.meta.env.VITE_GOOGLE_AUTH_URL,
-    FRONTEND_URL: import.meta.env.VITE_FRONTEND_URL,
+    API_URL: 'https://assessmate-j21k.onrender.com',
+    GOOGLE_AUTH_URL: 'https://assessmate-j21k.onrender.com/oauth2/authorization/google',
+    FRONTEND_URL: 'https://assessmate-learning.vercel.app',
 };
 
 export default config;

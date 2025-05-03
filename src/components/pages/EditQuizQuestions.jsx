@@ -24,7 +24,7 @@ function EditQuizQuestions({ user }) {
     const fetchQuestions = async () => {
       try {
         const headers = authHeader();
-        const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}/questions`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}/questions`, {
           method: 'GET',
           headers,
         });
@@ -134,7 +134,7 @@ function EditQuizQuestions({ user }) {
         points: parseInt(question.points),
       };
 
-      const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}/questions/${question.id}`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}/questions/${question.id}`, {
         method: 'PUT',
         headers: {
           ...headers,

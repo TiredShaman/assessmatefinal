@@ -32,7 +32,7 @@ function EditQuiz({ user }) {
     const fetchQuiz = async () => {
       try {
         const headers = authHeader();
-        const response = await fetch(`http://localhost:8080/api/teachers/quizzes`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes`, {
           method: 'GET',
           headers,
         });
@@ -74,7 +74,7 @@ function EditQuiz({ user }) {
     const fetchCourses = async () => {
       try {
         const headers = authHeader();
-        const response = await fetch(`http://localhost:8080/api/teachers/courses`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses`, {
           method: 'GET',
           headers,
         });
@@ -149,7 +149,7 @@ function EditQuiz({ user }) {
         endTime: quiz.endTime ? new Date(quiz.endTime).toISOString() : null,
       };
 
-      const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}`, {
         method: 'PUT',
         headers: {
           ...headers,

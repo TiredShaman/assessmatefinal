@@ -26,7 +26,7 @@ function EnrollStudent({ user, onEnroll }) {
     const fetchCourses = async () => {
       try {
         const headers = authHeader();
-        const response = await fetch('http://localhost:8080/api/teachers/courses', {
+        const response = await fetch('https://assessmate-j21k.onrender.com/api/teachers/courses', {
           method: 'GET',
           headers,
         });
@@ -78,7 +78,7 @@ function EnrollStudent({ user, onEnroll }) {
 
     try {
       const headers = authHeader();
-      const response = await fetch(`http://localhost:8080/api/teachers/courses/${selectedCourseId}/students`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses/${selectedCourseId}/students`, {
         method: 'POST',
         headers: {
           ...headers,

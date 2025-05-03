@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Award } from 'lucide-react';
+import config from '../../config/config.js';
 
 function Login({ setUser }) {
   const [username, setUsername] = useState('');
@@ -73,7 +74,7 @@ function Login({ setUser }) {
   }, []);
 
   const handleTokenValidation = (token, needsRoleSelection) => {
-    fetch('http://localhost:8080/api/auth/validate', {
+    fetch(`${config.API_URL}/api/auth/validate`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -124,7 +125,7 @@ function Login({ setUser }) {
       return;
     }
 
-    fetch('http://localhost:8080/api/auth/set-role', {
+    fetch(`${config.API_URL}/api/auth/set-role`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${tempUserData.token}`,
@@ -175,7 +176,7 @@ function Login({ setUser }) {
     console.log('Sending login payload:', payload);
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/signin', {
+      const response = await fetch(`${config.API_URL}/api/auth/signin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -222,7 +223,7 @@ function Login({ setUser }) {
     const top = window.screenY + (window.outerHeight - height) / 2;
     
     const popup = window.open(
-      'http://localhost:8080/oauth2/authorization/google',
+      'https://assessmate-j21k.onrender.com/oauth2/authorization/google',
       'googleOAuth',
       `width=${width},height=${height},left=${left},top=${top},status=yes,scrollbars=yes`
     );
@@ -236,7 +237,7 @@ function Login({ setUser }) {
     // Instead of checking popup.closed, use a message-based approach
     const handleMessage = (event) => {
       // Verify origin
-      if (event.origin !== 'http://localhost:8080') {
+      if (event.origin !== 'https://assessmate-j21k.onrender.com') {
         return;
       }
 

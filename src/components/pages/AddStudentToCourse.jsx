@@ -18,7 +18,7 @@ function AddStudentToCourse() {
     const requestData = { username: username.trim() };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/teachers/courses/${courseId}/students`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses/${courseId}/students`, {
         method: 'POST',
         headers: authHeader(), // Include the Authorization header and Content-Type
         body: JSON.stringify(requestData),

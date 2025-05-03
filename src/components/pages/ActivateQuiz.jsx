@@ -18,7 +18,7 @@ function ActivateQuizButton() {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/teachers/quizzes/${quizId}/activate`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/quizzes/${quizId}/activate`, {
         method: 'PUT',
         headers: authHeader(), // Include the Authorization header and Content-Type
       });

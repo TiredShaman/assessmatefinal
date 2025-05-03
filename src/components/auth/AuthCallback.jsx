@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import config from '../../config/config.js';
 
 function AuthCallback({ setUser }) {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function AuthCallback({ setUser }) {
     const needsRoleSelection = params.get('needsRoleSelection') === 'true';
 
     if (token) {
-      fetch('http://localhost:8080/api/auth/validate', {
+      fetch(`${config.API_URL}/api/auth/validate`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

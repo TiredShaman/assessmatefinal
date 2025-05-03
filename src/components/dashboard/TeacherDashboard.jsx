@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import authHeader from '../../services/authHeader';
 import Sidebar from '../dashboard/Sidebar';
+import config from '../../config/config.js';
 
 function TeacherDashboard({ user }) {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ function TeacherDashboard({ user }) {
     try {
       const headers = authHeader();
       console.log("Fetching classes with headers:", headers);
-      const response = await fetch('http://localhost:8080/api/teachers/courses', { headers });
+      const response = await fetch(`${config.API_URL}/api/teachers/courses`, { headers });
       if (!response.ok) {
         const errorData = await response.text();
         console.error("Fetch classes error:", response.status, errorData);
@@ -92,7 +93,7 @@ function TeacherDashboard({ user }) {
       ];
       const results = await Promise.all(
         endpoints.map(async ({ url, key }) => {
-          const response = await fetch(`http://localhost:8080${url}`, { headers });
+          const response = await fetch(`https://assessmate-j21k.onrender.com${url}`, { headers });
           if (!response.ok) {
             const errorBody = await response.text();
             console.error(`${key} API error:`, response.status, errorBody);
@@ -125,7 +126,7 @@ function TeacherDashboard({ user }) {
     e.preventDefault();
     try {
       const headers = authHeader();
-      const response = await fetch('http://localhost:8080/api/teachers/enroll-student', {
+      const response = await fetch(`${config.API_URL}/api/teachers/enroll-student`, {
         method: 'POST',
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: studentEmail, courseId: classId }),

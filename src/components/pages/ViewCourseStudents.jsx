@@ -39,7 +39,7 @@ function ViewCourseStudents({ user }) {
           throw new Error("No authentication token found. Please login again.");
         }
 
-        const response = await fetch(`http://localhost:8080/api/teachers/courses/${courseId}/students`, {
+        const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses/${courseId}/students`, {
           method: 'GET',
           headers,
         });
@@ -67,7 +67,7 @@ function ViewCourseStudents({ user }) {
         }
 
         try {
-          const courseResponse = await fetch(`http://localhost:8080/api/courses/${courseId}`, {
+          const courseResponse = await fetch(`https://assessmate-j21k.onrender.com/api/courses/${courseId}`, {
             method: 'GET',
             headers,
           });

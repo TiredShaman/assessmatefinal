@@ -58,7 +58,7 @@ function ViewCourses({ user }) {
     setLoading(true);
     try {
       const headers = authHeader();
-      const response = await fetch('http://localhost:8080/api/teachers/courses', {
+      const response = await fetch('https://assessmate-j21k.onrender.com/api/teachers/courses', {
         method: 'GET',
         headers,
       });
@@ -105,7 +105,7 @@ function ViewCourses({ user }) {
     try {
       const headers = authHeader();
       console.log("Updating course with ID:", editCourseId);
-      const response = await fetch(`http://localhost:8080/api/teachers/courses/${editCourseId}`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses/${editCourseId}`, {
         method: 'PUT',
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: courseTitle, description: courseDescription, code: courseCode }),
@@ -146,7 +146,7 @@ function ViewCourses({ user }) {
     try {
       const headers = authHeader();
       console.log("Deleting course with ID:", courseId);
-      const response = await fetch(`http://localhost:8080/api/teachers/courses/${courseId}`, {
+      const response = await fetch(`https://assessmate-j21k.onrender.com/api/teachers/courses/${courseId}`, {
         method: 'DELETE',
         headers,
       });
@@ -171,7 +171,7 @@ function ViewCourses({ user }) {
     e.preventDefault();
     try {
       const headers = authHeader();
-      const response = await fetch('http://localhost:8080/api/teachers/courses', {
+      const response = await fetch('https://assessmate-j21k.onrender.com/api/teachers/courses', {
         method: 'POST',
         headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: courseTitle, description: courseDescription, code: courseCode }),

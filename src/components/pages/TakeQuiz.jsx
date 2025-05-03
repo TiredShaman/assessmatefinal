@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AlertCircle, CheckCircle, Send, Loader } from 'lucide-react';
 import authHeader from '../../services/authHeader';
+import config from '../../config/config.js';
 
 function TakeQuiz({ user }) {
   const { quizId } = useParams();
@@ -30,7 +31,7 @@ function TakeQuiz({ user }) {
           throw new Error('No authentication token found. Please login again.');
         }
 
-        const response = await fetch(`http://localhost:8080/api/students/quizzes/${quizId}`, {
+        const response = await fetch(`${config.API_URL}/api/students/quizzes/${quizId}`, {
           method: 'GET',
           headers,
         });
@@ -135,7 +136,7 @@ function TakeQuiz({ user }) {
         throw new Error('No authentication token found. Please login again.');
       }
 
-      const response = await fetch(`http://localhost:8080/api/students/quizzes/${quizId}/submit`, {
+      const response = await fetch(`${config.API_URL}/api/students/quizzes/${quizId}/submit`, {
         method: 'POST',
         headers: {
           ...headers,
