@@ -41,15 +41,11 @@ const ApiService = {
 
     try {
       const response = await fetch(`${config.API_URL}${endpoint}`, fetchOptions);
-      return await handleApiResponse(response);
+      return handleApiResponse(response);
     } catch (error) {
       console.error('API request failed:', error);
       throw error;
     }
-  },
-
-  fetchProtectedData: () => {
-    return ApiService.makeRequest('/api/protected-endpoint');
   }
 };
 
