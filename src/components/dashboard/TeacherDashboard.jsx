@@ -118,8 +118,18 @@ function TeacherDashboard({ user }) {
   };
 
   const handleLogout = () => {
+    setIsAuthenticated(false);
+    setTeacherStats({
+      totalCourses: 0,
+      totalQuizzes: 0,
+      totalStudents: 0,
+      activeQuizzes: 0,
+    });
+    setClasses([]);
     localStorage.clear();
-    navigate("/login");
+    sessionStorage.clear();
+    // Force a page reload and redirect to login
+    window.location.href = '/login';
   };
 
   const handleEnrollStudent = async (e) => {
