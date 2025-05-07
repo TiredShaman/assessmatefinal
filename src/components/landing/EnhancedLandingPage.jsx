@@ -474,7 +474,7 @@ export default function AssessMateLanding() {
                 </p>
                 <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
                   <Link
-                    to="/register"
+                    to="/login"
                     className="w-full sm:w-auto px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
                     aria-label="Start for free with AssessMate"
                   >
@@ -995,7 +995,7 @@ export default function AssessMateLanding() {
       {/* Sticky CTA Button */}
       <div className="fixed bottom-6 right-6 z-50 animate-fade-in-up">
         <Link
-          to="/register"
+          to="/login"
           className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center"
           aria-label="Start for free with AssessMate"
         >
