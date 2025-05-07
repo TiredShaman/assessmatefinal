@@ -75,6 +75,15 @@ function Sidebar({ user, activeItem, onLogout }) {
     if (profileOpen) setProfileOpen(false);
   };
 
+  const handleLogout = () => {
+    setSidebarOpen(false);
+    localStorage.clear();
+    sessionStorage.clear();
+    onLogout(); // Call parent's logout handler
+    // Navigate after cleanup
+    window.location.href = '/login';
+  };
+
   return (
     <>
       {/* Mobile header */}
@@ -169,7 +178,7 @@ function Sidebar({ user, activeItem, onLogout }) {
           </div>
           <div className="p-4 border-t border-cyan-700">
             <button
-              onClick={onLogout}
+              onClick={handleLogout}
               className="w-full group flex items-center px-4 py-3 text-sm font-medium rounded-2xl text-white bg-red-600 hover:bg-red-700 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.3"
             >
               <LogOut className="mr-4 h-6 w-6 text-white group-hover:scale-110 transition-transform duration-200" />
@@ -251,10 +260,7 @@ function Sidebar({ user, activeItem, onLogout }) {
             </div>
             <div className="p-4 border-t border-cyan-700">
               <button
-                onClick={() => {
-                  setSidebarOpen(false);
-                  onLogout();
-                }}
+                onClick={handleLogout}
                 className="w-full group flex items-center px-4 py-3 text-sm font-medium rounded-2xl text-white bg-red-600 hover:bg-red-700 hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.3"
               >
                 <LogOut className="mr-4 h-6 w-6 text-white group-hover:scale-110 transition-transform duration-200" />

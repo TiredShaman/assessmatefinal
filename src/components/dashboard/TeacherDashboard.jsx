@@ -128,7 +128,8 @@ function TeacherDashboard({ user }) {
     setClasses([]);
     localStorage.clear();
     sessionStorage.clear();
-    // Force a page reload and redirect to login
+    
+    // Use window.location.href instead of navigate
     window.location.href = '/login';
   };
 

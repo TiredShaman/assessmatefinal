@@ -147,8 +147,17 @@ function StudentDashboard({ user }) {
   };
 
   const handleLogout = () => {
+    setIsAuthenticated(false);
+    setStats({
+      enrolledCourses: 0,
+      completedQuizzes: 0,
+      pendingQuizzes: 0,
+    });
     localStorage.clear();
-    navigate("/login");
+    sessionStorage.clear();
+    
+    // Use window.location.href instead of navigate
+    window.location.href = '/login';
   };
 
   const handleViewQuizzes = (courseId) => {
