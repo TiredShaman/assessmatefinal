@@ -20,7 +20,6 @@ function Sidebar({ user, activeItem, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
-  const navigate = useNavigate();
 
   const navItems = [
     {
@@ -80,8 +79,9 @@ function Sidebar({ user, activeItem, onLogout }) {
     setSidebarOpen(false);
     localStorage.clear();
     sessionStorage.clear();
-    onLogout && onLogout();
-    navigate('/login'); // <-- use navigate instead of window.location.href
+    onLogout(); // Call parent's logout handler
+    // Navigate after cleanup
+    window.location.href = '/login';
   };
 
   return (
